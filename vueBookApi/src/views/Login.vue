@@ -4,15 +4,13 @@
       <img src="../assets/images/BookMoA.png" alt="" />
     </div>
     <div class="loginBoxBody">
-      <input
-        type="text"
+      <InputBox
         v-model="loginMember.memId"
-        placeholder="아이디 입력해주세요."
+        :placeholder="'아이디를 입력하세요'"
       />
-      <input
-        type="text"
+      <InputBox
         v-model="loginMember.memPwd"
-        placeholder="비밀번호 입력해주세요."
+        :placeholder="'비밀번호 입력해주세요.'"
       />
       <button class="buttonTop" @click="userLogin">로그인</button>
       <button class="buttonBottom" @click="goToSingUp">회원가입</button>
@@ -21,9 +19,10 @@
 </template>
 
 <script setup>
-import { login } from "@/api/member";
-import { reactive, watch } from "vue";
+import { loginAPI } from "@/api/member";
+import { reactive, watchEffect } from "vue";
 import { useRouter } from "vue-router";
+import InputBox from "@/components/InputBox.vue";
 
 const router = useRouter();
 // 회원가입 페이지 이동
@@ -34,22 +33,20 @@ const goToSingUp = () => {
 const goToHome = () => {
   router.push("/");
 };
-
+// 지역변수 로그인정보
 const loginMember = reactive({
   memId: "",
   memPwd: "",
 });
+watchEffect(() => {
+  console.log("변경된 값:", loginMember);
+});
 
 // 로그인 API 호출
 const userLogin = async () => {
-  const result = await login(loginMember);
+  const result = await loginAPI(loginMember);
   console.log(result);
 };
-
-// 리액트 임펙트처럼 확인할때 사용
-// watch(loginMember, (newVal) => {
-//   console.log(newVal);
-// });
 </script>
 
 <style scoped>
