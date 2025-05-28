@@ -7,10 +7,13 @@
       <InputBox
         v-model="loginMember.memId"
         :placeholder="'아이디를 입력하세요'"
+        @enter="userLogin"
       />
       <InputBox
         v-model="loginMember.memPwd"
         :placeholder="'비밀번호 입력해주세요.'"
+        inputType="password"
+        @enter="userLogin"
       />
       <button class="buttonTop" @click="userLogin">로그인</button>
       <button class="buttonBottom" @click="goToSingUp">회원가입</button>
@@ -20,7 +23,7 @@
 
 <script setup>
 import { loginAPI } from "@/api/member";
-import { reactive, watchEffect } from "vue";
+import { reactive, watchEffect, ref } from "vue";
 import { useRouter } from "vue-router";
 import InputBox from "@/components/InputBox.vue";
 
@@ -38,15 +41,21 @@ const loginMember = reactive({
   memId: "",
   memPwd: "",
 });
-watchEffect(() => {
-  console.log("변경된 값:", loginMember);
-});
 
 // 로그인 API 호출
 const userLogin = async () => {
-  const result = await loginAPI(loginMember);
-  console.log(result);
+  if (loginMember.memId == "" || loginMember.memPwd == "") {
+    alert("제대로 입력해주세요");
+  } else {
+    const result = await loginAPI(loginMember);
+    if (result) {
+      alert("로그인에 성공하였습니다.");
+      sessionStorage.setItem("token", result.data);
+      router.push("/");
+    }
+  }
 };
+// 엔터처리
 </script>
 
 <style scoped>

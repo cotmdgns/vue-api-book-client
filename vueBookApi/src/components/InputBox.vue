@@ -1,10 +1,11 @@
 <template>
   <input
     class="inputBox"
-    type="text"
+    :type="inputType"
     :value="modelValue"
     @input="updateModelDate"
     :placeholder="placeholder"
+    @keydown.enter="$emit('enter')"
   />
 </template>
 
@@ -12,12 +13,13 @@
 import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
+  inputType: { type: String, default: "text" },
   modelValue: String,
   placeholder: String,
 });
 
 // 이렇게 설명해야 부모에도 전달가능
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "enter"]);
 // input 값이 변경될 때 update:modelDate 이벤트를 emit
 const updateModelDate = (event) => {
   emit("update:modelValue", event.target.value);

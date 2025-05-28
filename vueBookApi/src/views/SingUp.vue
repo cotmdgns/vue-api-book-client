@@ -6,48 +6,70 @@
     <div class="signBoxBody">
       <div class="signBoxBodyInput">
         <InputBox
-          v-model="signUpMember.memId"
+          v-model="signUpMember.member.memId"
           :placeholder="'아이디을 입력하세요'"
-          @input="signUpIdBoo = true"
-          :style="styles.memId"
+          @input="signUpMember.memberBoolean.MemIdBoo = true"
+          :style="signUpMember.memberStyle.memId"
+          inputType="text"
         />
         <div @click="clientIdCheck" class="signBoxBodyCheckBox">중복체크</div>
       </div>
 
       <InputBox
-        v-model="signUpMember.memPwd"
+        v-model="signUpMember.member.memPwd"
         :placeholder="'비밀번호를 입력하세요'"
-        @input="signUpPwdBoo = true"
-        :style="styles.memPwd"
+        @input="signUpMember.memberBoolean.MemPwdBoo = true"
+        :style="signUpMember.memberStyle.memPwd"
+        inputType="password"
       />
       <InputBox
-        v-model="signUpMember.memName"
+        v-model="signUpMember.member.memName"
         :placeholder="'이름를 입력하세요'"
-        @input="signUpNameBoo = true"
-        :style="styles.memName"
+        @input="signUpMember.memberBoolean.MemNameBoo = true"
+        :style="signUpMember.memberStyle.memName"
       />
       <InputBox
-        v-model="signUpMember.email"
+        v-model="signUpMember.member.email"
         :placeholder="'이메일를 입력하세요'"
-        @input="signUpEmailBoo = true"
-        :style="styles.memEmail"
+        @input="signUpMember.memberBoolean.MemEmailBoo = true"
+        :style="signUpMember.memberStyle.memEmail"
       />
       <div class="wrongBox">
-        <div v-if="signUpNameBoo && !signUpName.test(signUpMember.memName)">
-          이름 : 옳바르게 입력해주세요.
-        </div>
-        <div v-if="signUpIdBoo && !signUpId.test(signUpMember.memId)">
+        <div
+          v-if="
+            signUpMember.memberBoolean.IdBoo &&
+            !signUpId.test(signUpMember.member.memId)
+          "
+        >
           아이디 : 5~20자의 영문 소문자로만 가능합니다.
         </div>
-        <div v-if="signUpPwdBoo && !signUpPwd.test(signUpMember.memPwd)">
+        <div
+          v-if="
+            signUpMember.memberBoolean.PwdBoo &&
+            !signUpPwd.test(signUpMember.member.memPwd)
+          "
+        >
           비밀번호 : 최소 5글자 이상이며 영문자 또는 특수문자 하나씩
           들어가야합니다
         </div>
-        <div v-if="signUpEmailBoo && !signUpEmail.test(signUpMember.email)">
+        <div
+          v-if="
+            signUpMember.memberBoolean.NameBoo &&
+            !signUpName.test(signUpMember.member.memName)
+          "
+        >
+          이름 : 옳바르게 입력해주세요.
+        </div>
+        <div
+          v-if="
+            signUpMember.memberBoolean.EmailBoo &&
+            !signUpEmail.test(signUpMember.member.email)
+          "
+        >
           이메일 : 제대로 입력해주세요
         </div>
       </div>
-      <button class="buttonTop" @click="">회원가입</button>
+      <button class="buttonTop" @click="signUp">회원가입</button>
     </div>
   </div>
 </template>
@@ -56,68 +78,108 @@
 import { reactive, watchEffect, ref } from "vue";
 import { useRouter } from "vue-router";
 import InputBox from "@/components/InputBox.vue";
-import { idCheckAPI } from "@/api/member";
+import { idCheckAPI, signUpAPI } from "@/api/member";
 
 const router = useRouter();
 // 홈페이지로 이동
 const goToHome = () => {
   router.push("/");
 };
-
-// 아이디 체크 API
-const clientIdCheck = async () => {
-  const result = await idCheckAPI(signUpMember.memId);
-};
+const signUpId = /^[a-z]{5,12}$/;
+const signUpPwd = /^(?=.*[a-z])(?=.*[\W]).{5,}$/;
+const signUpName = /^[가-힣]{2,}$/;
+const signUpEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const signUpMember = reactive({
-  memName: "",
-  memId: "",
-  memPwd: "",
-  email: "",
+  member: {
+    memId: "",
+    memPwd: "",
+    memName: "",
+    email: "",
+  },
+  memberBoolean: {
+    MemNameBoo: false,
+    MemIdBoo: false,
+    MemPwdBoo: false,
+    MemEmailBoo: false,
+  },
+  memberStyle: {
+    memName: { border: "1px solid #ccc" },
+    memId: { border: "1px soild #ccc" },
+    memPwd: { border: "1px soild #ccc" },
+    memEmail: { border: "1px soild #ccc" },
+  },
+  signUpMember: [
+    {
+      field: "memId",
+      valid: () =>
+        signUpId.test(signUpMember.member.memId) &&
+        signUpMember.member.memId.trim() !== "",
+      error: "아이디가 옳바르지 않습니다",
+      flag: "MemIdBoo",
+    },
+    {
+      field: "memPwd",
+      valid: () =>
+        signUpPwd.test(signUpMember.member.memPwd) &&
+        signUpMember.member.memPwd.trim() !== "",
+      error: "비밀번호가 옳바르지 않습니다",
+      flag: "MemPwdBoo",
+    },
+    {
+      field: "memName",
+      valid: () =>
+        signUpName.test(signUpMember.member.memName) &&
+        signUpMember.member.memName.trim() !== "",
+      error: "이름이 옳바르지 않습니다",
+      flag: "MemNameBoo",
+    },
+    {
+      field: "memEmail",
+      valid: () =>
+        signUpEmail.test(signUpMember.member.email) &&
+        signUpMember.member.email.trim() !== "",
+      error: "이메일이 옳바르지 않습니다",
+      flag: "MemEmailBoo",
+    },
+  ],
 });
+// 아이디 체크 API
+let idCheckBoo = false;
+const clientIdCheck = async () => {
+  if (signUpMember.signUpMember[0].valid()) {
+    await idCheckAPI(signUpMember.member.memId);
+    idCheckBoo = true;
+    alert("가능한 아이디입니다!");
+  } else {
+    alert("5~20자의 영문 소문자로만 가능합니다");
+  }
+};
+// 회원가입 로직
+const signUp = async () => {
+  const check = signUpMember.signUpMember.find((v) => !v.valid());
+  if (check) {
+    signUpMember.memberBoolean[check.flag] = true;
+    alert(check.error);
+  } else if (!idCheckBoo) {
+    alert("아이디 중복 체크를 해주세요.");
+  } else {
+    await signUpAPI(signUpMember.member);
+    alert("회원가입 되었습니다!");
+    router.push("/");
+  }
+};
 
-const signUpName = /^[가-힣]{2,}$/;
-const signUpNameBoo = ref(false);
-
-const signUpId = /^[a-z0-9]{5,12}$/;
-const signUpIdBoo = ref(false);
-
-const signUpPwd = /^(?=.*[a-z])(?=.*[\W]).{5,}$/;
-const signUpPwdBoo = ref(false);
-
-const signUpEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const signUpEmailBoo = ref(false);
-
-const styles = reactive({
-  memName: { border: "1px solid #ccc" },
-  memId: { border: "1px soild #ccc" },
-  memPwd: { border: "1px soild #ccc" },
-  memEmail: { border: "1px soild #ccc" },
-});
 watchEffect(() => {
-  if (signUpNameBoo.value && !signUpName.test(signUpMember.memName)) {
-    styles.memName = { border: "1px solid red" };
-  } else {
-    styles.memName = { border: "1px solid #ccc" };
-  }
-
-  if (signUpIdBoo.value && !signUpId.test(signUpMember.memId)) {
-    styles.memId = { border: "1px solid red" };
-  } else {
-    styles.memId = { border: "1px solid #ccc" };
-  }
-
-  if (signUpPwdBoo.value && !signUpPwd.test(signUpMember.memPwd)) {
-    styles.memPwd = { border: "1px solid red" };
-  } else {
-    styles.memPwd = { border: "1px solid #ccc" };
-  }
-
-  if (signUpEmailBoo.value && !signUpPwd.test(signUpMember.memEmail)) {
-    styles.memEmail = { border: "1px solid red" };
-  } else {
-    styles.memEmail = { border: "1px solid #ccc" };
-  }
+  signUpMember.signUpMember.forEach((check) => {
+    if (signUpMember.memberBoolean[check.flag]) {
+      if (!check.valid()) {
+        signUpMember.memberStyle[check.field] = { border: "1px solid red" };
+      } else {
+        signUpMember.memberStyle[check.field] = { border: "1px solid green" };
+      }
+    }
+  });
 });
 </script>
 
@@ -176,6 +238,7 @@ watchEffect(() => {
   margin-top: 40px;
   color: white;
   background-color: rgb(131, 131, 255);
+  cursor: pointer;
 }
 .buttonTop:hover {
   background-color: rgb(110, 110, 212);
