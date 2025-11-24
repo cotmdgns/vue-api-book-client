@@ -22,8 +22,8 @@ https://velog.io/@cotn963/TIL-4-GITHUB-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-READ
 
 # 팀원 구성
   채승훈
-# 링크[Uploading 채승훈.pdf…]()
-
+  
+[Uploading 채승훈.pdf…]()
 
 # 만들게 된 과정 및 개발기간
 - 과정
