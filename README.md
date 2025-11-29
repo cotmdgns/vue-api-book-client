@@ -1,5 +1,5 @@
 <img src="https://capsule-render.vercel.app/api?type=Venom&color=auto&height=300&section=header&text=VUE%20API%20BOOK&fontSize=90" />
-
+# 개발하는동안 사용한 기술들프로젝트 소개
 <p align="center">
 개발하는동안 사용한 기술들
 </p>
@@ -18,7 +18,7 @@
 
 
 https://velog.io/@cotn963/TIL-4-GITHUB-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-README-%EA%BE%B8%EB%AF%B8%EA%B8%B0
-
+# 프로젝트 소개
 
 # 팀원 구성
   채승훈
