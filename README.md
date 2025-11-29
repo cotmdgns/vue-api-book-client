@@ -1,5 +1,5 @@
 <img src="https://capsule-render.vercel.app/api?type=Venom&color=auto&height=300&section=header&text=VUE%20API%20BOOK&fontSize=90" />
-# 개발하는동안 사용한 기술들프로젝트 소개
+
 <p align="center">
 개발하는동안 사용한 기술들
 </p>
@@ -24,8 +24,6 @@ https://velog.io/@cotn963/TIL-4-GITHUB-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-READ
 # 팀원 구성
   채승훈
   
-[Uploading 채승훈.pdf…]()
-
 # 만들게 된 과정 및 개발기간
 - 과정
 누구나 쉽게 사용할 수 있으며 빠르고 정확하게 사용자가 원하는 책을 저장할 수 있는 
